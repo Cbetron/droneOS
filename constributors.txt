@@ -1,2 +1,4 @@
-Marc Steinebrunner
-Raphael Kreft
+Main constributors
+-------------------
+Marc Steinebrunner - marc.steinebrunner@gmail.com
+Raphael Kreft - raphaelkreft@gmx.de
