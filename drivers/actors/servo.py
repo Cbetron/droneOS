@@ -4,7 +4,7 @@
 """servo.py:	Servo class"""
 
 __author__ = "Raphael Kreft"
-__copyright__ = "Copyright (c) 2016 Raphael Kreft"
+__copyright__ = "Copyright (c) 2017 Raphael Kreft"
 __version__ = "Development v0.0"
 __email__ = "raphaelkreft@gmx.de"
 __status__ = "Dev"
