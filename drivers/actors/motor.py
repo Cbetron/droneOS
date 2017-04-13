@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+# https://goo.gl/o1Uo6S  Datasheet & Erklärung
 """motor.py:	Motor class"""
 
 __author__ = "Marc Steinebrunner" 
