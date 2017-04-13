@@ -3,10 +3,10 @@
 
 """motor.py:	Motor class"""
 
-__author__ = "Raphael Kreft"
-__copyright__ = "Copyright (c) 2016 Raphael Kreft"
-__version__ = "Development v0.0"
-__email__ = "raphaelkreft@gmx.de"
+__author__ = "Marc Steinebrunner" 
+__copyright__ = "Copyright (c) 2017 Marc Steinebrunner"
+__version__ = "Development v0.02"
+__email__ = "marc.steinebrunner@gmail.com"
 __status__ = "Dev"
 
 import RPi.GPIO as gpio
