@@ -48,5 +48,5 @@ class Motor(object):
     def change_frequenz(self, frequenz):
         self.pwmpin.ChangeFrequency(frequenz)
 
-    def change_position(self, percent):
+    def change_speed(self, percent):
         self.pwmpin.ChangeDutyCycle(percent)
