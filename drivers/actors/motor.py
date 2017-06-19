@@ -62,5 +62,5 @@ class Motor(object):
         gpio.output(self.pinA , False)
         gpio.output(self.pinB , True)
 
-    def change_position(self, percent):
+    def change_speed(self, percent):
         self.pwmpin.ChangeDutyCycle(percent)
