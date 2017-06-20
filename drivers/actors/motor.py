@@ -28,12 +28,13 @@ The Pin +Vmotor (L293D Pin 8) is the Power for the Motor's (4.5V - 36V)
 
 
 class Motor(object):
-    def __init__(self, pin, startpercent, pin1, pin2):
+
+    def __init__(self, pwmpin, startpercent, pin1, pin2, Kofiguration):
         gpio.setup(self.pwmpin, gpio.OUT)
-        self.pwmpin = gpio.PWM(pin, 500)
+        self.pwmpin = gpio.PWM(pwmpin, 500)
         self.pinA = pin1
         self.pinB = pin2
-        self.percent = startpercent-1
+        self.percent = (startpercent-1) + Kofiguration
 
         gpio.setup(self.pinA, gpio.OUT)
         gpio.setup(self.pinB, gpio.OUT)
@@ -54,6 +55,8 @@ class Motor(object):
 
     @staticmethod
 
+
+
     def clockwise(self):
         gpio.output(self.pinA , True)
         gpio.output(self.pinB , False)
@@ -62,5 +65,5 @@ class Motor(object):
         gpio.output(self.pinA , False)
         gpio.output(self.pinB , True)
 
-    def change_position(self, percent):
+    def change_speed(self, percent):
         self.pwmpin.ChangeDutyCycle(percent)
