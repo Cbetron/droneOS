@@ -14,7 +14,10 @@ import RPi.GPIO as gpio
 
 class Motor(object):
     def __init__(self, pin, startpercent, pin1, pin2):
+        gpio.setmode(gpio.BOARD)
         gpio.setup(self.pwmpin, gpio.OUT)
+        
+        
         self.pwmpin = gpio.PWM(pin, 100)
         self.pin1 = pin1
         self.pin2 = pin2
