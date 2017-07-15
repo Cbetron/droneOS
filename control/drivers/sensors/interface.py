@@ -13,6 +13,7 @@ __status__ = "Dev"
                                         Gps: g0"""
 
 import time
+import threading
 
 
 class Data(object):
@@ -40,7 +41,7 @@ class Pool(object):
                 while len(sensor) > self.dataamount:
                     del sensor[0]
 
-    def get_data(self, id, amount):
+    def get_data(self, id, amount=1):
         return self.pool[id][:amount]
 
 
@@ -54,3 +55,4 @@ class Interface(object):
 
     def add_sensor_dat(self, sensorid, data, si):
         self.datapool.add_data(sensorid, Data(data, si, sensorid))
+        self.datapool.check_dataamount()

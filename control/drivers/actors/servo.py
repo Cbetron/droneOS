@@ -13,11 +13,11 @@ import RPi.GPIO as gpio
 
 
 class Servo(object):
-    def __init__(self, pin, frequenz, PulseRangeMinInUS, PulseRangeMaxInUS, operating_angle):
+    def __init__(self, pin, frequenz, PulseRangeMinInUS=2.5, PulseRangeMaxInUS=12.5, operating_angle=180):
         self.frequenz = frequenz
         self.pwmpin = gpio.PWM(pin, frequenz)
         self.PRMin = PulseRangeMinInUS / 1000
-        self.PRMax = PulseRangeMaxInUS
+        self.PRMax = PulseRangeMaxInUS / 1000
         self.operating_angle = operating_angle
 
     def get_frequenz(self):
@@ -32,13 +32,8 @@ class Servo(object):
     def get_operating_angle(self):
         return self.operating_angle
 
-
-    @staticmethod
     def degree_to_cycle(self, degrees):
-        if (self.operating_angle == 180):
-            return self.PRMin + degrees * ((self.PRMax - self.PRMin )/ 180)
-        elif (self.operating_angle == 360):
-            return self.PRMin + degrees * ((self.PRMax - self.PRMin )/ 360)
+        return self.PRMin + degrees * ((self.PRMax - self.PRMin) / self.operating_angle)
 
     def change_frequenz(self, frequenz):
         self.pwmpin.ChangeFrequency(frequenz)

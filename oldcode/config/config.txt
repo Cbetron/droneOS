@@ -1,8 +1,0 @@
-#Config-File of Drohne-OS developed by R.K
-# Lines beginning with "#" will be ignored
-# Write config attr like this: Name:Value
-
-
-
-
-
