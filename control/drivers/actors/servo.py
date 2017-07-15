@@ -11,9 +11,10 @@ __status__ = "Dev"
 
 import RPi.GPIO as gpio
 
-
 class Servo(object):
-    def __init__(self, pin, frequenz, PulseRangeMinInUS=2.5, PulseRangeMaxInUS=12.5, operating_angle=180):
+    def __init__(self, pin, frequenz, PulseRangeMinInUS, PulseRangeMaxInUS, operating_angle):
+        gpio.setmode(gpio.BOARD)
+        gpio.setup(pin ,gpio.OUT)
         self.frequenz = frequenz
         self.pwmpin = gpio.PWM(pin, frequenz)
         self.PRMin = PulseRangeMinInUS / 1000
