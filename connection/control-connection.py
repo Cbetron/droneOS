@@ -9,11 +9,37 @@ __version__ = "Development v0.0"
 __email__ = "raphaelkreft@gmx.de"
 __status__ = "Dev"
 
+# Systemimports
+import pickle
+import socket
+import subprocess
+import sys
+import os
 import threading
+
 
 def accepted_ips():
 	with open("acc_ip.dat", "r") as file:
 		return file.readlines()
+
+
+class SimplePacker(object):
+    @staticmethod
+    def pack_data(data, cypher=None):
+        serialized = pickle.dumps(data)
+        if not cypher:
+            return serialized
+        else:
+            return cypher(serialized)
+
+    @staticmethod
+    def unpack_data(data, cypher=None):
+        unserialized = pickle.loads(bytes(data))
+        if not cypher:
+            return unserialized
+        else:
+            return cypher(unserialized)
+
 
 class SocketController(threading.Thread):
     def __init__(self, data_packer=SimplePacker, sock=None, port=TCP_PORT, max_clients=MAX_CLIENTS, buffersize=BUFFER_SIZE):
@@ -36,7 +62,7 @@ class SocketController(threading.Thread):
             self.sock.listen(self.max_clients)
             connection, addr = self.sock.accept()
             print("SocketController: Got Connection from: {}".format(addr))
-            if addr not in [connection.get_address() for connection in self.connections] and addr[0] in ACCEPTED_IP:
+            if addr not in [connection.get_address() for connection in self.connections] and addr[0] in accepted_ips():
                 Conn = ConnectionHandler(connection, addr, self.packer, self.buffersize)
                 Conn.start()
                 self.connections.append(Conn)
@@ -87,3 +113,7 @@ class ConnectionHandler(threading.Thread):
                 sys.exit(0)
             else:
                 continue
+
+
+class ControlConnection(threading.Thread):
+	def __init__()
