@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # https://goo.gl/o1Uo6S  Datasheet & Erklärung
 """motor.py:	Motor class"""
@@ -14,20 +14,18 @@ import RPi.GPIO as gpio
 
 class Motor(object):
 
-    def __init__(self, pin, pin1, pin2):
+    def __init__(self, EN, IN1, IN2):
         gpio.setmode(gpio.BOARD)
-        gpio.setup(self.pwmpin, gpio.OUT)
+        gpio.setup(EN, gpio.OUT)
         
         
-        self.pwmpin = gpio.PWM(pin, 100)
-        self.pin1 = pin1
-        self.pin2 = pin2
+        self.pwmpin = gpio.PWM(EN, 100)
+        self.pin1 = IN1
+        self.pin2 = IN2
         self.percent = None
 
         gpio.setup(self.pin1, gpio.OUT)
         gpio.setup(self.pin2, gpio.OUT)
-
-        self.pwmpin.ChangeDutyCycle(initialspeed)
 
     def get_pwmpin(self):
         return self.pwmpin
@@ -39,7 +37,7 @@ class Motor(object):
         return self.pin2
 
     def get_speed(self):
-        return self.speed
+        return self.percent
 
     def clockwise(self):
         gpio.output(self.pin1, True)
@@ -57,4 +55,4 @@ class Motor(object):
         self.pwmpin.ChangeDutyCycle(self.percent)
 
     def __del__(self):
-        self.change_speed(0)
+        gpio.cleanup(EN,IN1,IN2)
