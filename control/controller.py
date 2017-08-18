@@ -12,18 +12,37 @@ __status__ = "Dev"
 import threading
 import time
 
-from control.drivers.sensors.interface import  Interface
+from control.drivers.sensors.interface import  Interface as S_INTERFACE
+from control.drivers.actors.interface import  Interface as A_INTERFACE
+from control.sequences import basics
 
+class DeviceHandler(object):
+	def __init__(self):
+		self.devices = dict()
+
+	def load(self):
+		with open("devices.dat", "r").readlines() as data:
+			for d in data:
+				if d.startswith(":"):
+					key, driver, val, group = d.split("-")
+					self.devices += {key: [driver,list(val.split(",")),group]}
+				else:
+					continue
+	
+	def write(self):
+		pass			
 class Controller(threading.Thread):
     def __init__(self, name):
         super().__init__()
-        self.SensorInterface = Interface()
-        self.sensorsrunning = {} # dictionary with the active sensors the user want to have data from
+        self.SensorInterface = S_INTERFACE()
+        self.ActorInterface = A_INTERFACE()
         self.running = None
         self.name = name
 
     def start(self):
         self.running = True
+        self.SensorInterface.start()
+        self.ActorInterface.start()
         self.run()
 
     def stop(self):
@@ -32,6 +51,4 @@ class Controller(threading.Thread):
 
     def run(self):
         while self.running:
-            print("Iam running")
-
-    def sensor_chain(self):
+            pass

@@ -45,10 +45,35 @@ class Pool(object):
         return self.pool[id][:amount]
 
 
-class Interface(object):
-    def __init__(self):
+class Interface(threading.Thread):
+    def __init__(self, delay=0.1):
+        super().__init__()
+        self.lock = threading.Lock()
+        self.running = False
         self.sensors = []
         self.datapool = Pool()
+        self._delay = delay
+
+    def get_delay(self):
+        return self._delay
+
+    def set_delay(self, delay):
+        self.lock.acquire()
+        self._delay = delay
+        self.lock.release()
+
+    def get_sensors(self):
+        return self.sensors
+
+    def register_sensor(self, sensor_obj):
+        self.lock.acquire()
+        self.sensors.append(sensor_obj)
+        self.lock.release()
+
+    def unregister_sensor(self, sensor_obj):
+        self.lock.acquire()
+        self.sensors.__delattr__(sensor_obj)
+        self.lock.release()
 
     def get_sensor_data(self, sensorid, amount=1):
         return self.datapool.get_data(sensorid, amount)
@@ -56,3 +81,13 @@ class Interface(object):
     def add_sensor_dat(self, sensorid, data, si):
         self.datapool.add_data(sensorid, Data(data, si, sensorid))
         self.datapool.check_dataamount()
+
+    def start(self):
+        self.running = True
+        self.run()
+
+    def run(self):
+        while self.running:
+            time.sleep(self.get_delay())
+            for sensor in self.sensors:
+                self.add_sensor_dat(*sensor.get_sensor_data())

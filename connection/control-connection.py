@@ -17,11 +17,46 @@ import sys
 import os
 import threading
 
+# Standart Network Constants
+TCP_PORT = 5000
+BUFFER_SIZE = 1024
+MAX_CLIENTS = 1
+
 
 def accepted_ips():
 	with open("acc_ip.dat", "r") as file:
 		return file.readlines()
 
+def threadNames():
+	return [t.getName() for t in threading.enumerate()]
+
+def getThread_byName(name):
+	tnb = zip(threading.enumerate(), threadNames())
+	for t, n in tnb:
+		if n is name:
+			return t
+
+class Queue(object):
+	def __init__(self, max_size = 10):
+		self.max_size = max_size
+		self.datafield = []
+	def qsize(self):
+		return len(self.datafield)
+	def empty(self):
+		return True if self.qsize() is 0 else False
+	def full(self):
+		return True if self.qsize() >= max_size else False 
+	def put(self, item):
+		if not self.full():
+			self.datafield.append(item)
+		elif self.full():
+			del self.datafield[0]
+			self.datafield.append(item)
+	def get(self):
+		if not self.empty():
+			data = self.datafield[0]
+			del self.datafield[0]
+			return data
 
 class SimplePacker(object):
     @staticmethod
@@ -62,7 +97,7 @@ class SocketController(threading.Thread):
             self.sock.listen(self.max_clients)
             connection, addr = self.sock.accept()
             print("SocketController: Got Connection from: {}".format(addr))
-            if addr not in [connection.get_address() for connection in self.connections] and addr[0] in accepted_ips():
+            if addr not in [connection.get_address() for connection in self.connections] and addr[0] in accepted_ips(): # check if ip is permitted
                 Conn = ConnectionHandler(connection, addr, self.packer, self.buffersize)
                 Conn.start()
                 self.connections.append(Conn)
@@ -104,16 +139,62 @@ class ConnectionHandler(threading.Thread):
     def run(self):  # Insert your Handling of Clients Here
         while self.running:
             query = str(self.recieve())
-            print("Connectionhandler {}: recieved Order: {}".format(self.conn_addr, query))
-            if query == "S1":
-                print("Connectionhandler {}: Analyse System...".format(self.conn_addr))
-                self.send(SystemInfo().systeminfo())
-            elif query == "S2":
-                print("Connectionhandler {}: Shutdown Order recieved!".format(self.conn_addr))
-                sys.exit(0)
-            else:
-                continue
+            getThread_byName("controlconn").queue.put(query)
+           	
 
 
 class ControlConnection(threading.Thread):
-	def __init__()
+	def __init__(self):
+		self.Lock = threading.Lock
+		self.running = False
+		self.queue = Queue()
+		self.SocketController = None
+		self._port = TCP_PORT
+		self._buffersize = BUFFER_SIZE
+		self._max_clients = MAX_CLIENTS
+
+	def get_port(self):
+		return self._port
+
+	def set_port(self, port, restart=False):
+		self._port = port
+		if restart:
+			self.restartSocketControl()
+	def get_buffersize(self):
+		return self._buffersize
+
+	def set_buffersize(self, buffersize, restart=False):
+		self._buffersize = buffersize
+		if restart:
+			self.restartSocketControl()
+
+	def get_maxc(self):
+		return self.max_clients
+
+	def set_maxc(self, maxc, restart=False):
+		self._max_clients = maxc
+		if restart:
+			self.restartSocketControl()
+
+	def restartSocketControl(self):
+		self.Lock.accquire()
+		del self.SocketController
+		self.SocketController = SocketController(port=self.get_port(), buffersize=self.get_buffersize(), max_clients=self.get_maxc())
+		self.Lock.release()
+
+	def start(self):
+		if "controlconn" not in threadNames():
+			self.running = True
+			self.SocketController = SocketController(port=self.get_port(), buffersize=self.get_buffersize(), max_clients=self.get_maxc())
+			self.run()
+
+	def get_query(self):
+		return self.queue.get()
+
+	def run(self):
+		if not self.SocketController.isalive():
+			self.SocketController.start()
+
+	def stop(self):
+		self.SocketController.stop()
+		del self.queue

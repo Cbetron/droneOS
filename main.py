@@ -29,7 +29,7 @@ EXIT_HELP = 1   # Help text printed
 EXIT_ERR = 2    # Error
 
 # Help-Text
-HELP = "  DroneOS\n______________"
+HELP = "  DroneOS\n____________"
 
 
 def die(cause, exit_code=EXIT_ERR):
@@ -58,7 +58,9 @@ class Drone(threading.Thread):
 
 	def run(self):
 		while self.running:
-			
+			query = self.connection.recieve()
+			self.brain.compute(query)
+
 
 
 

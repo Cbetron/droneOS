@@ -22,6 +22,7 @@ class Ultraschallsensor(object):
         Returns:    -
         """
         self.ID = identifier
+        self.si = "metre"
         self.GPIO_Trigger = triggerpin
         self.GPIO_Echo = echopin
         self.set_pins(self.GPIO_Trigger, self.GPIO_Echo)
@@ -70,3 +71,6 @@ class Ultraschallsensor(object):
         distanz = (zeitspanne * 34300) / 2
 
         return distanz
+
+    def get_sensor_data(self):
+        return self.get_id(), self.si, self.distanz()

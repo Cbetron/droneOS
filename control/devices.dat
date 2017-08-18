@@ -1,0 +1,7 @@
+# Devices file: All Devices(Motors, Sensors usw) are listed in this file. The Controller is Using the Devices.dat for Controlling the drone
+# Devices are saved in this pattern: :Name-PathtoDriver-InitialvaluesforDriver-Group
+
+:MotorFL-control.drivers.actors.motor.Motor-00,0-ACTOR
+:MotorFR-control.drivers.actors.motor.Motor-00,0-ACTOR
+:MotorBL-control.drivers.actors.motor.Motor-00,0-ACTOR
+:MotorBR-control.drivers.actors.motor.Motor-00,0-ACTOR
