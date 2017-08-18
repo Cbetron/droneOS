@@ -9,6 +9,17 @@ __version__ = "Development v0.02"
 __email__ = "marc.steinebrunner@gmail.com"
 __status__ = "Dev"
 
+""" 
+Link to Data Sheet: https://goo.gl/o1Uo6S 
+This class was written in dependence on the IPC L293D link to the data sheet above. 
+Pin IN1 and Pin IN2 must be connected to the 2 IN ports on the same page.  
+The EN must be connected to the EN pin on the same page as IN1 and IN2. 
+Pins marked with 0V must be connectet with a Ground Port. 
+The Pin V+(L293D Pin 16) is the Power for the Board (5V) 
+The Pin +Vmotor (L293D Pin 8) is the Power for the Motor's (4.5V - 36V) 
+""" 
+
+
 import RPi.GPIO as gpio
 
 
