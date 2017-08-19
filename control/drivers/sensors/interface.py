@@ -91,3 +91,7 @@ class Interface(threading.Thread):
             time.sleep(self.get_delay())
             for sensor in self.sensors:
                 self.add_sensor_dat(*sensor.get_sensor_data())
+
+    def stop(self):
+        self.running = False
+        del self.datapool
