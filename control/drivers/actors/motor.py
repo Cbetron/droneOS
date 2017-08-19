@@ -25,7 +25,7 @@ import RPi.GPIO as gpio
 
 class Motor(object):
 
-    def __init__(self, EN, IN1, IN2):
+    def __init__(self, EN, IN1, IN2, direction):
         gpio.setmode(gpio.BOARD)
         gpio.setup(EN, gpio.OUT)
         
@@ -37,7 +37,12 @@ class Motor(object):
 
         gpio.setup(self.pin1, gpio.OUT)
         gpio.setup(self.pin2, gpio.OUT)
-
+        
+        if dircetion > 0:
+            clockwise()
+        else:
+            counter_clockwise()
+            
     def get_pwmpin(self):
         return self.pwmpin
 
