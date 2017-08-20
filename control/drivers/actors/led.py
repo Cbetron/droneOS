@@ -7,7 +7,10 @@ class LED(object):
     def __init__(self, pin):
         self.pin = pin
         self.status = False
-
+    
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(self.pin ,GPIO.OUT)
+        
     def on(self):
         GPIO.output(self.pin, GPIO.HIGH)
         self.status = True
